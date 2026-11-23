@@ -49,4 +49,4 @@ This project was created as part of my hands-on cybersecurity learning and profe
 The screenshot below shows the Python File Integrity Monitor
 detecting a modification to the monitored file.
 
-![File Integrity Monitor Alert](Screenshot 2026-11-22 220322.png)
+![File Integrity Monitor Alert](Screenshot%202026-11-22%20220322.png)
