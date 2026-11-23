@@ -49,4 +49,29 @@ This project was created as part of my hands-on cybersecurity learning and profe
 The screenshot below shows the Python File Integrity Monitor
 detecting a modification to the monitored file.
 
+## Advanced Monitoring Features
+
+The File Integrity Monitor now supports:
+
+- Monitoring multiple files in a directory
+- Detecting newly created files
+- Detecting deleted files
+- Identifying modified files using SHA-256 hashes
+- Automatically scanning files every three seconds
+- Recording security alerts with timestamps
+
+### Example Security Alerts
+
+ALERT: File modified: password_policy.txt
+
+ALERT: File added: network_settings.txt
+
+ALERT: File deleted: network_settings.txt
+
+### Limitations
+
+The tool monitors changes while running. It does not yet
+save a trusted baseline between sessions or distinguish
+unreadable files from deleted files.
+
 ![File Integrity Monitor Alert](Screenshot%202026-11-22%20220322.png)
