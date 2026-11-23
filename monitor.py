@@ -4,9 +4,13 @@ import time
 import logging
 from pathlib import Path
 
-# Set up security logging
+# Project folder
+BASE_DIR = Path(__file__).resolve().parent
+MONITOR_DIR = BASE_DIR / "monitored_files"
+
+# Configure security logging
 logging.basicConfig(
-    filename="security.log",
+    filename=BASE_DIR / "security.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -20,37 +24,58 @@ def calculate_hash(file_path):
 
     return sha256.hexdigest()
 
-file_path = Path(__file__).parent / "test.txt"
+def scan_files():
+    """Create a snapshot of all monitored files."""
+    hashes = {}
 
-if not file_path.is_file():
-    print("ERROR: test.txt was not found.")
-else:
-    original_hash = calculate_hash(file_path)
+    for file_path in MONITOR_DIR.rglob("*"):
+        if file_path.is_file():
+            try:
+                relative_path = file_path.relative_to(MONITOR_DIR)
+                hashes[str(relative_path)] = calculate_hash(file_path)
+            except OSError as error:
+                logging.error("Could not read %s: %s", file_path, error)
+
+    return hashes
+
+def report_alert(message):
+    print(message, flush=True)
+    logging.warning(message)
+
+def main():
+    if not MONITOR_DIR.is_dir():
+        print("ERROR: Create the monitored_files folder first.")
+        return
+
+    previous = scan_files()
+
     print("File Integrity Monitor started.")
-    print("Monitoring test.txt every 3 seconds.")
+    print(f"Monitoring {len(previous)} files.")
+    print("Checking every 3 seconds.")
     print("Press Ctrl+C to stop.")
 
     try:
         while True:
             time.sleep(3)
+            current = scan_files()
 
-            if not file_path.is_file():
-                message = "ALERT: Monitored file was deleted!"
-                print(message)
-                logging.warning(message)
-                break
+            # Detect new files
+            for file in sorted(current.keys() - previous.keys()):
+                report_alert(f"ALERT: File added: {file}")
 
-            try:
-                new_hash = calculate_hash(file_path)
-            except OSError as error:
-                logging.error("Could not read file: %s", error)
-                continue
+            # Detect deleted files
+            for file in sorted(previous.keys() - current.keys()):
+                report_alert(f"ALERT: File deleted: {file}")
 
-            if original_hash != new_hash:
-                message = "ALERT: File modification detected!"
-                print(message)
-                logging.warning(message)
-                original_hash = new_hash
+            # Detect modified files
+            for file in sorted(current.keys() & previous.keys()):
+                if current[file] != previous[file]:
+                    report_alert(f"ALERT: File modified: {file}")
+
+            previous = current
 
     except KeyboardInterrupt:
         print("\nMonitoring stopped.")
+
+if __name__ == "__main__":
+    main()
