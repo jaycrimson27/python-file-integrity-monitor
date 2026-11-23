@@ -1,0 +1,15 @@
+
+# Local monitoring data
+baseline.json
+security.log
+
+# Python generated files
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables and secrets
+.env
