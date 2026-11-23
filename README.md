@@ -44,3 +44,9 @@ I developed this project to gain hands-on experience with Python programming, cy
 
 ## Project Purpose
 This project was created as part of my hands-on cybersecurity learning and professional portfolio development.
+## Project Demonstration
+
+The screenshot below shows the Python File Integrity Monitor
+detecting a modification to the monitored file.
+
+![File Integrity Monitor Alert](file-integrity-alert.png)
