@@ -1,5 +1,7 @@
 # python-file-integrity-monitor# Python File Integrity Monitor
 
+[![Cybersecurity Python Tests](https://github.com/jaycrimson27/python-file-integrity-monitor/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jaycrimson27/python-file-integrity-monitor/actions/workflows/python-tests.yml)
+
 ## Overview
 This project is a Python-based file integrity monitoring tool that uses SHA-256 hashing to detect changes made to files.
 
